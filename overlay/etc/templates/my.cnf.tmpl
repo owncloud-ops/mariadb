@@ -1,0 +1,59 @@
+[client-server]
+port = 3306
+socket = /run/mysqld/mysqld.sock
+
+[mysql]
+no-auto-rehash
+default-character-set = {{ getenv "MARIADB_DEFAULT_CHARACTER_SET" "utf8mb4" }}
+
+[mysqld]
+bind-address = 0.0.0.0
+character-set-server = {{ getenv "MARIADB_CHARACTER_SET_SERVER" "utf8mb4" }}
+collation-server = {{ getenv "MARIADB_COLLATION_SERVER" "utf8mb4_general_ci" }}
+{{ if getenv "MARIADB_TRANSACTION_ISOLATION" }}
+transaction-isolation = {{ getenv "MARIADB_TRANSACTION_ISOLATION" }}
+{{ end }}
+
+skip-external-locking
+key_buffer_size = {{ getenv "MARIADB_KEY_BUFFER_SIZE" "128M" }}
+max_allowed_packet = {{ getenv "MARIADB_MAX_ALLOWED_PACKET" "16M" }}
+table_open_cache = {{ getenv "MARIADB_TABLE_OPEN_CACHE" "2000" }}
+sort_buffer_size = {{ getenv "MARIADB_SORT_BUFFER_SIZE" "2M" }}
+net_buffer_length = {{ getenv "MARIADB_NET_BUFFER_SIZE" "16K" }}
+read_buffer_size = {{ getenv "MARIADB_READ_BUFFER_SIZE" "128K" }}
+read_rnd_buffer_size = {{ getenv "MARIADB_READ_RND_BUFFER_SIZE" "256K" }}
+myisam_sort_buffer_size = {{ getenv "MARIADB_MYISAM_SORT_BUFFER_SIZE" "128MB" }}
+max_connections = {{ getenv "MARIADB_MAX_CONNECTIONS" "151" }}
+
+tmpdir = /tmp
+
+{{ if eq (getenv "MARIADB_LOG_BIN" "0") "0" }}
+skip-log-bin
+{{ else }}
+log-bin = {{ getenv "MARIADB_LOG_BIN" }}
+binlog_format = {{ getenv "MARIADB_BINLOG_FORMAT" "MIXED" | strings.ToUpper }}
+{{ end }}
+
+innodb_data_home_dir = /var/lib/mysql
+innodb_data_file_path = {{ getenv "MARIADB_INNODB_DATA_FILE_PATH" "ibdata1:12M:autoextend" }}
+innodb_log_group_home_dir = /var/lib/mysql
+innodb_buffer_pool_size = {{ getenv "MARIADB_INNODB_BUFFER_POOL_SIZE" "128M" }}
+innodb_log_file_size = {{ getenv "MARIADB_INNODB_LOG_FILE_SIZE" "96M" }}
+innodb_log_buffer_size = {{ getenv "MARIADB_INNODB_LOG_BUFFER_SIZE" "16M" }}
+innodb_flush_log_at_trx_commit = {{ getenv "MARIADB_INNODB_FLUSH_LOG_AT_TRX_COMMIT" "1" }}
+innodb_lock_wait_timeout = {{ getenv "MARIADB_INNODB_LOCK_WAIT_TIMEOUT" "50" }}
+innodb_use_native_aio = {{ getenv "MARIADB_INNODB_USE_NATIVE_AIO" "ON" | strings.ToUpper }}
+innodb_file_per_table = {{ getenv "MARIADB_INNODB_FILE_PER_TABLE" "ON" | strings.ToUpper }}
+innodb_read_only_compressed = {{ getenv "MARIADB_INNODB_READ_ONLY_COMPRESSED" "OFF" | strings.ToUpper }}
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet = {{ getenv "MARIADB_MAX_ALLOWED_PACKET" "16M" }}
+
+[mariadbd]
+skip-host-cache
+skip-name-resolve
+
+!includedir /etc/mysql/mariadb.conf.d/
+!includedir /etc/mysql/conf.d/

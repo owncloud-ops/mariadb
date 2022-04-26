@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# shellcheck disable=SC1091
+source /usr/local/lib/log.sh
+
+/usr/local/bin/gomplate -o /etc/mysql/my.cnf -f /etc/templates/my.cnf.tmpl
+export MARIADB_MYSQL_LOCALHOST_USER="${MARIADB_MYSQL_LOCALHOST_USER:=True}"
+
+log_info "Start Mariadb\n"
+exec /usr/local/bin/docker-entrypoint.sh mariadbd
