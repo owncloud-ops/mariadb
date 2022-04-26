@@ -53,8 +53,6 @@ MARIADB_INNODB_READ_ONLY_COMPRESSED=OFF
 
 ## Build
 
-You could use the `BUILD_VERSION` to specify the target version.
-
 ```Shell
 docker build -f Dockerfile -t mariadb:latest .
 ```
