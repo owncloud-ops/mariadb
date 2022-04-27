@@ -7,7 +7,7 @@ source /usr/local/lib/log.sh
 
 DATABASES=$(mariadb \
     --host="${MARIADB_BACKUP_HOST:-mariadb}" \
-    --port="${MARIADB_BACKUP_POST:-3306}" \
+    --port="${MARIADB_BACKUP_PORT:-3306}" \
     --user=root \
     --password="${MARIADB_ROOT_PASSWORD}" \
     -e 'SHOW DATABASES' -s --skip-column-names)
@@ -32,7 +32,7 @@ for DATABASE in ${DATABASES}; do
     OUTFILE=${WORKDIR}/${DATABASE}.sql.gz
     mariadb-dump --single-transaction --skip-add-locks --skip-lock-tables \
         --host="${MARIADB_BACKUP_HOST:-mariadb}" \
-        --port="${MARIADB_BACKUP_POST:-3306}" \
+        --port="${MARIADB_BACKUP_PORT:-3306}" \
         --user=root \
         --password="${MARIADB_ROOT_PASSWORD}" \
         --databases "${DATABASE}" | gzip >|"${OUTFILE}"
