@@ -17,7 +17,7 @@ _process_sql() {
         )
     fi
 
-    mariadb -B "$@"
+    mariadb -B "${args[@]}" "$@"
 }
 
 # TESTS
