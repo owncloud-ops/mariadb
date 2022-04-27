@@ -10,7 +10,7 @@ DATABASES=$(mariadb \
     --port="${MARIADB_BACKUP_PORT:-3306}" \
     --user=root \
     --password="${MARIADB_ROOT_PASSWORD}" \
-    -e 'SHOW DATABASES' -s --skip-column-names)
+    -B --skip-column-names -e 'SHOW DATABASES')
 
 BACKUP_PATH=/var/lib/backup
 
