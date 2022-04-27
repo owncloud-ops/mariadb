@@ -12,7 +12,7 @@ _process_sql() {
         args+=(
             --host localhost
             --protocol tcp
-            --username=root
+            --user=root
             --password="${MARIADB_ROOT_PASSWORD}"
         )
     fi
@@ -36,7 +36,7 @@ connect() {
 
     if [[ -n "${MARIADB_ROOT_PASSWORD}" ]]; then
         args+=(
-            --username=root
+            --user=root
             --password="${MARIADB_ROOT_PASSWORD}"
         )
     fi
