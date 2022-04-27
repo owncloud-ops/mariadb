@@ -5,10 +5,12 @@ set -eo pipefail
 # shellcheck disable=SC1091
 source /usr/local/lib/log.sh
 
-DATABASES=$(mysql --host="${MARIADB_BACKUP_HOST:-mariadb}" --port="${MARIADB_BACKUP_POST:-3306}" \
-    --user="${MARIADB_BACKUP_USER}" \
-    --password="${MARIADB_BACKUP_PASSWORD}" \
-    -e 'SHOW DATABASES;' | sed 1d)
+DATABASES=$(mysql \
+    --host="${MARIADB_BACKUP_HOST:-mariadb}" \
+    --port="${MARIADB_BACKUP_POST:-3306}" \
+    --user=root \
+    --password="${MARIADB_ROOT_PASSWORD}" \
+    -e 'SHOW DATABASES' -s --skip-column-names)
 
 BACKUP_PATH=/var/lib/backup
 
@@ -31,8 +33,8 @@ for DATABASE in ${DATABASES}; do
     mysqldump --single-transaction --skip-add-locks --skip-lock-tables \
         --host="${MARIADB_BACKUP_HOST}" \
         --port="${MARIADB_BACKUP_POST:-3306}" \
-        --user="${MARIADB_BACKUP_USER}" \
-        --password="${MARIADB_BACKUP_PASSWORD}" \
+        --user=root \
+        --password="${MARIADB_ROOT_PASSWORD}" \
         --databases "${DATABASE}" | gzip >|"${OUTFILE}"
     chmod 640 "${OUTFILE}"
     ENDS=$(date +%s)

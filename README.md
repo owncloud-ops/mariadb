@@ -24,9 +24,6 @@ MARIADB_ROOT_PASSWORD=
 
 MARIADB_BACKUP_HOST=mariadb
 MARIADB_BACKUP_POST=3306
-MARIADB_BACKUP_USER=
-MARIADB_BACKUP_PASSWORD=
-MARIADB_BACKUP_IGNORE=
 
 # [mysql]
 MARIADB_DEFAULT_CHARACTER_SET=utf8mb4
@@ -65,8 +62,7 @@ The container image can also be used for scheduling database backups. Please ens
 docker run --no-healthcheck \
     --network my-network \
     --entrypoint /usr/bin/entrypoint \
-    -e MARIADB_BACKUP_USER=root \
-    -e MARIADB_BACKUP_PASSWORD=password \
+    -e MARIADB_ROOT_PASSWORD=password \
     -it mariadb:devel backup
 ```
 
