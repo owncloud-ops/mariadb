@@ -5,7 +5,7 @@ set -eo pipefail
 # shellcheck disable=SC1091
 source /usr/local/lib/log.sh
 
-DATABASES=$(mysql \
+DATABASES=$(mariadb \
     --host="${MARIADB_BACKUP_HOST:-mariadb}" \
     --port="${MARIADB_BACKUP_POST:-3306}" \
     --user=root \
@@ -30,8 +30,8 @@ for DATABASE in ${DATABASES}; do
     log_info "Starting backup for ${DATABASE}"
     START=$(date +%s)
     OUTFILE=${WORKDIR}/${DATABASE}.sql.gz
-    mysqldump --single-transaction --skip-add-locks --skip-lock-tables \
-        --host="${MARIADB_BACKUP_HOST}" \
+    mariadb-dump --single-transaction --skip-add-locks --skip-lock-tables \
+        --host="${MARIADB_BACKUP_HOST:-mariadb}" \
         --port="${MARIADB_BACKUP_POST:-3306}" \
         --user=root \
         --password="${MARIADB_ROOT_PASSWORD}" \
