@@ -24,7 +24,9 @@ RUN apt-get update && apt-get install -y wget curl gnupg2 apt-transport-https ca
     curl -SsL "https://github.com/owncloud-ops/container-library/releases/download/${CONTAINER_LIBRARY_VERSION}/container-library.tar.gz" | tar xz -C / && \
     chmod 755 /usr/local/bin/gomplate && \
     mkdir -p /var/lib/mysql/ && \
+    mkdir -p /var/lib/backup/ && \
     chown -R mysql:mysql /var/lib/mysql/ && \
+    chown -R mysql:mysql /var/lib/backup/ && \
     chown mysql:root /etc/mysql/my.cnf && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
@@ -35,7 +37,7 @@ EXPOSE 3306
 
 USER mysql
 
-ENTRYPOINT ["/usr/bin/entrypoint"]
-HEALTHCHECK --interval=15s --timeout=5s --retries=10 CMD /usr/bin/healthcheck
+ENTRYPOINT ["/usr/bin/entrypoint", "server"]
+HEALTHCHECK --interval=15s --timeout=5s --retries=10 CMD /usr/bin/healthcheck --connect
 WORKDIR /var/lib/mysql
 CMD []

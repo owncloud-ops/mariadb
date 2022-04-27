@@ -6,7 +6,29 @@ set -eo pipefail
 source /usr/local/lib/log.sh
 
 /usr/local/bin/gomplate -o /etc/mysql/my.cnf -f /etc/templates/my.cnf.tmpl
-export MARIADB_MYSQL_LOCALHOST_USER="${MARIADB_MYSQL_LOCALHOST_USER:=True}"
 
-log_info "Start Mariadb\n"
-exec /usr/local/bin/docker-entrypoint.sh mariadbd
+start_server() {
+    log_info "Start MariaDB\n"
+    exec /usr/local/bin/docker-entrypoint.sh mariadbd
+}
+
+run_backup() {
+    log_info "Run MariaDB backup"
+    exec /usr/bin/backup
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+    server)
+        start_server
+        ;;
+    backup)
+        run_backup
+        exit 0
+        ;;
+    *)
+        log_info "Unknown entrypoint option $1" >&2
+        exit 1
+        ;;
+    esac
+done
