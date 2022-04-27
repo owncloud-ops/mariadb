@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# shellcheck disable=SC1091
+source /usr/local/lib/log.sh
+
+DATABASES=$(mysql --host="${MARIADB_BACKUP_HOST:-mariadb}" --port="${MARIADB_BACKUP_POST:-3306}" \
+    --user="${MARIADB_BACKUP_USER}" \
+    --password="${MARIADB_BACKUP_PASSWORD}" \
+    -e 'SHOW DATABASES;' | sed 1d)
+
+BACKUP_PATH=/var/lib/backup
+
+# prepare a new backup location based on DOW (day of week)
+DOW=$(date +%u)
+WORKDIR=${BACKUP_PATH}/backup.${DOW}
+
+if [ -d "${WORKDIR}" ]; then
+    rm -rf "${WORKDIR}"
+fi
+
+mkdir -p "${WORKDIR}"
+chmod 740 "${WORKDIR}"
+cd "${WORKDIR}"
+
+for DATABASE in ${DATABASES}; do
+    log_info "Starting backup for ${DATABASE}"
+    START=$(date +%s)
+    OUTFILE=${WORKDIR}/${DATABASE}.sql.gz
+    mysqldump --single-transaction --skip-add-locks --skip-lock-tables \
+        --host="${MARIADB_BACKUP_HOST}" \
+        --port="${MARIADB_BACKUP_POST:-3306}" \
+        --user="${MARIADB_BACKUP_USER}" \
+        --password="${MARIADB_BACKUP_PASSWORD}" \
+        --databases "${DATABASE}" | gzip >|"${OUTFILE}"
+    chmod 640 "${OUTFILE}"
+    ENDS=$(date +%s)
+    log_info "Done within $(("${ENDS}" - "${START}"))s"
+done

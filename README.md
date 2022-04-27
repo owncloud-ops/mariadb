@@ -12,6 +12,7 @@ Custom container image for [MariaDB](https://mariadb.com/kb/en/documentation/).
 ## Volumes
 
 - /var/lib/mysql
+- /var/lib/backup
 
 ## Environment Variables
 
@@ -20,7 +21,12 @@ MARIADB_DATABASE=
 MARIADB_USER=
 MARIADB_PASSWORD=
 MARIADB_ROOT_PASSWORD=
-MARIADB_MYSQL_LOCALHOST_USER=True
+
+MARIADB_BACKUP_HOST=mariadb
+MARIADB_BACKUP_POST=3306
+MARIADB_BACKUP_USER=
+MARIADB_BACKUP_PASSWORD=
+MARIADB_BACKUP_IGNORE=
 
 # [mysql]
 MARIADB_DEFAULT_CHARACTER_SET=utf8mb4
@@ -49,6 +55,19 @@ MARIADB_INNODB_LOCK_WAIT_TIMEOUT=50
 MARIADB_INNODB_USE_NATIVE_AIO=ON
 MARIADB_INNODB_FILE_PER_TABLE=ON
 MARIADB_INNODB_READ_ONLY_COMPRESSED=OFF
+```
+
+## Backups
+
+The container image can also be used for scheduling database backups. Please ensure that the backup container is assigned to the same network as the database container. The backups are stored in `/var/lib/backup` and a volume or bind mount need to be configured to store the backups permanently.
+
+```Shell
+docker run --no-healthcheck \
+    --network my-network \
+    --entrypoint /usr/bin/entrypoint \
+    -e MARIADB_BACKUP_USER=root \
+    -e MARIADB_BACKUP_PASSWORD=password \
+    -it mariadb:devel backup
 ```
 
 ## Build
