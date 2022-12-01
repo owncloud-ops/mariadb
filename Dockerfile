@@ -1,4 +1,4 @@
-FROM mariadb:10.6.11@sha256:6bc56598a88147a64b771ac1ace3c1bf3064e2d50e9b08ba6157471d9515fc53
+FROM mariadb:10.6.11@sha256:1a4441f0739c01833680f7d944830873589b9037863d258264ff4b1733432119
 
 LABEL maintainer="ownCloud GmbH"
 LABEL org.opencontainers.image.authors="ownCloud GmbH"
