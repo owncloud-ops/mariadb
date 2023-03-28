@@ -2,6 +2,7 @@
 
 [![Build Status](https://drone.owncloud.com/api/badges/owncloud-ops/mariadb/status.svg)](https://drone.owncloud.com/owncloud-ops/mariadb/)
 [![Docker Hub](https://img.shields.io/badge/docker-latest-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/owncloudops/mariadb)
+[![Quay.io](https://img.shields.io/badge/quay-latest-blue.svg?logo=docker&logoColor=white)](https://quay.io/repository/owncloudops/mariadb)
 
 Custom container image for [MariaDB](https://mariadb.com/kb/en/documentation/).
 
