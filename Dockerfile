@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y wget curl gnupg2 apt-transport-https ca
     chown -R mysql:mysql /var/lib/mysql/ && \
     chown -R mysql:mysql /var/lib/backup/ && \
     chown mysql:root /etc/mysql/my.cnf && \
+    rm /usr/local/bin/gosu && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
