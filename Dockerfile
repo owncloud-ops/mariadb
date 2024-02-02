@@ -1,4 +1,4 @@
-FROM docker.io/mariadb:10.6.16@sha256:fdaf867c077204d2e84a454ae4ce8e8e441905c64bd3a834312b135454899cda
+FROM docker.io/mariadb:10.6.16@sha256:7a1846dbba58672f2821102dabdb43ec98f4a93e362acf3f1fadbe0c9304d704
 
 LABEL maintainer="ownCloud GmbH"
 LABEL org.opencontainers.image.authors="ownCloud GmbH"
